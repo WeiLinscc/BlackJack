@@ -9,9 +9,10 @@ import UIKit
 
 class PlayViewController: UIViewController {
     
-    @IBOutlet weak var nameLbl1: UILabel!
+  
+    @IBOutlet weak var welcomeLbl: UILabel!
     @IBOutlet weak var ptsLbl: UILabel!
-    @IBOutlet weak var nameLbl2: UILabel!
+    @IBOutlet weak var youLbl: UILabel!
     
     @IBOutlet weak var playBtn: UIButton!
     @IBOutlet weak var hitBtn: UIButton!
@@ -29,9 +30,10 @@ class PlayViewController: UIViewController {
     var house_score: Int = 0;
     var you_score: Int = 0;
 //    var houseCount = 0
-    var youCount = 0;
+    var getCardCount = 0;
     var iniX = 100;
     var cardViews: [UIImageView] = []
+
     var addImgY = 460
     var who_score = 0
     var youBusted = false
@@ -40,20 +42,20 @@ class PlayViewController: UIViewController {
         super.viewDidLoad();
 
         // Do any additional setup after loading the view.
-        nameLbl1.text = "Welcome, " + passName;
+        welcomeLbl.text = "Welcome, " + passName;
         ptsLbl.text = "Your Score: " + String(pts) + "pts";
                 
-        nameLbl2.text = passName;
-        if (nameLbl2.text == ""){
-            nameLbl2.text = "You";
-            nameLbl1.text = "Welcome, Friend";
+        youLbl.text = passName;
+        if (youLbl.text == ""){
+            youLbl.text = "You";
+            welcomeLbl.text = "Welcome, Friend";
         }
         houseCard1.image = UIImage(named: "backHouse.png");
         houseCard2.image = UIImage(named: "backHouse.png");
         youCard1.image = UIImage(named: "backYou.png")
         youCard2.image = UIImage(named: "backYou.png")
  
-        youCount = 0
+        getCardCount = 0
         iniX = 100
         youBusted = false
     }
@@ -88,18 +90,7 @@ class PlayViewController: UIViewController {
         
         if you_score > 21 {
             youBusted = true
-//            let loseController = UIAlertController(title: "Sorry", message: "You Busted!", preferredStyle: .alert)
-//            let dismissAction = UIAlertAction(title: "Dismiss", style: .cancel, handler: { action in
-//                self.pts -= 50
-//                self.viewDidLoad()
-//                for i in self.cardViews {
-//                    i.removeFromSuperview()
-//                }
-//
-//            })
-//
-//            loseController.addAction(dismissAction)
-//            self.present(loseController, animated: true, completion: nil)
+            displayResult(isWin: false)
 
             hitBtn.isHidden = true
             stayBtn.isHidden = true
@@ -110,62 +101,33 @@ class PlayViewController: UIViewController {
     }
     
     @IBAction func stayBtnPressed(_ sender: UIButton) {
-        youCount = 0
+        getCardCount = 0
         iniX = 100
         
-        if house_score > you_score {
-            let loseController = UIAlertController(title: "Sorry", message: "You Lose!", preferredStyle: .alert)
-            let dismissAction = UIAlertAction(title: "Dismiss", style: .cancel, handler: { action in
-                self.pts -= 50
-                self.viewDidLoad()
-                for i in self.cardViews {
-                    i.removeFromSuperview()
-                }
-            })
-
-            loseController.addAction(dismissAction)
-            self.present(loseController, animated: true, completion: nil)
+        if house_score >= you_score {
+            displayResult(isWin: false)
+            
             hitBtn.isHidden = true
             stayBtn.isHidden = true
             playBtn.isHidden = false
         }
         
-        while house_score <= you_score {
+        while house_score < you_score {
             addCards(isYou: false)
             house_score = who_score
             
             if house_score > 21 {
                 displayResult(isWin: true)
-//                let loseController = UIAlertController(title: "Congratiuation", message: "You Win!(House Busted)", preferredStyle: .alert)
-//                let dismissAction = UIAlertAction(title: "Dismiss", style: .cancel, handler: { action in
-//                    self.pts += 50
-//                    self.viewDidLoad()
-//                    for i in self.cardViews {
-//                        i.removeFromSuperview()
-//                    }
-//
-//                })
-//
-//                loseController.addAction(dismissAction)
-//                self.present(loseController, animated: true, completion: nil)
-
+                
                 hitBtn.isHidden = true
                 stayBtn.isHidden = true
                 playBtn.isHidden = false
+                return
             }
         }
         
-        let loseController = UIAlertController(title: "Sorry", message: "House > You!", preferredStyle: .alert)
-        let dismissAction = UIAlertAction(title: "Dismiss", style: .cancel, handler: { action in
-            self.pts -= 50
-            self.viewDidLoad()
-            for i in self.cardViews {
-                i.removeFromSuperview()
-            }
-        })
-
-        loseController.addAction(dismissAction)
-        self.present(loseController, animated: true, completion: nil)
+        displayResult(isWin: false)
+        
         hitBtn.isHidden = true
         stayBtn.isHidden = true
         playBtn.isHidden = false
@@ -184,19 +146,19 @@ class PlayViewController: UIViewController {
         
         let cardView = UIImageView()
         cardViews.append(cardView)
-        cardViews[youCount].frame = CGRect(x: iniX + 40, y: addImgY, width: 104, height: 145)
-        cardViews[youCount].image = UIImage(named: "\(card_name_list[0]).png")
-        view.addSubview(cardViews[youCount])
+        cardViews[getCardCount].frame = CGRect(x: iniX + 40, y: addImgY, width: 104, height: 145)
+        cardViews[getCardCount].image = UIImage(named: "\(card_name_list[0]).png")
+        view.addSubview(cardViews[getCardCount])
         
         iniX += 40
         who_score += Int(playCards["\(card_name_list[0])"]!)
         card_name_list.remove(at: 0)
-        youCount += 1
+        getCardCount += 1
     }
     
     func displayResult(isWin: Bool){
         if isWin {
-            let loseController = UIAlertController(title: "Congratiuation", message: "You Win!(House Busted)", preferredStyle: .alert)
+            let winController = UIAlertController(title: "Congratulations!", message: "You Win!", preferredStyle: .alert)
             let dismissAction = UIAlertAction(title: "Dismiss", style: .cancel, handler: { action in
                 self.pts += 50
                 self.viewDidLoad()
@@ -206,11 +168,11 @@ class PlayViewController: UIViewController {
                 
             })
 
-            loseController.addAction(dismissAction)
-            self.present(loseController, animated: true, completion: nil)
+            winController.addAction(dismissAction)
+            self.present(winController, animated: true, completion: nil)
         }else {
             if youBusted {
-                let loseController = UIAlertController(title: "Sorry", message: "You Busted!", preferredStyle: .alert)
+                let loseController = UIAlertController(title: "Lose!", message: "You Busted!", preferredStyle: .alert)
                 let dismissAction = UIAlertAction(title: "Dismiss", style: .cancel, handler: { action in
                     self.pts -= 50
                     self.viewDidLoad()
@@ -223,19 +185,21 @@ class PlayViewController: UIViewController {
                 loseController.addAction(dismissAction)
                 self.present(loseController, animated: true, completion: nil)
             } else {
-                
+                let loseController = UIAlertController(title: "Sorry", message: "You Lose!", preferredStyle: .alert)
+                let dismissAction = UIAlertAction(title: "Dismiss", style: .cancel, handler: { action in
+                    self.pts -= 50
+                    self.viewDidLoad()
+                    for i in self.cardViews {
+                        i.removeFromSuperview()
+                    }
+                })
+
+                loseController.addAction(dismissAction)
+                self.present(loseController, animated: true, completion: nil)
             }
         }
     }
     
-    /*
-    // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

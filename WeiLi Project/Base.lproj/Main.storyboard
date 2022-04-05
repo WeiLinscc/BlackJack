@@ -276,13 +276,13 @@
                         <outlet property="hitBtn" destination="y8x-Gb-hGu" id="UY0-Uz-xw0"/>
                         <outlet property="houseCard1" destination="eue-52-fKk" id="5ik-6m-Nt7"/>
                         <outlet property="houseCard2" destination="HgC-fS-hZp" id="6FK-x9-NEe"/>
-                        <outlet property="nameLbl1" destination="fpE-vd-bmA" id="KbV-Hw-wej"/>
-                        <outlet property="nameLbl2" destination="S6X-Th-QHH" id="rJt-dR-d7t"/>
                         <outlet property="playBtn" destination="T5I-3U-ksr" id="ljf-gN-NkE"/>
                         <outlet property="ptsLbl" destination="1d4-3O-gAP" id="ZNH-n8-QO5"/>
                         <outlet property="stayBtn" destination="3Nh-lB-miY" id="CLG-b4-X59"/>
+                        <outlet property="welcomeLbl" destination="fpE-vd-bmA" id="gxF-LO-ekO"/>
                         <outlet property="youCard1" destination="JdV-Kb-KlL" id="NhM-gv-2BI"/>
                         <outlet property="youCard2" destination="er0-5V-pB4" id="bKi-ZO-0WB"/>
+                        <outlet property="youLbl" destination="S6X-Th-QHH" id="8Ak-J4-hS8"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GfX-RC-kdt" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

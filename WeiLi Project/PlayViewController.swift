@@ -17,16 +17,17 @@ class PlayViewController: UIViewController {
     @IBOutlet weak var playBtn: UIButton!
     @IBOutlet weak var hitBtn: UIButton!
     @IBOutlet weak var stayBtn: UIButton!
+    @IBOutlet weak var exitBtn: UIButton!
+    @IBOutlet weak var checkBtn: UIButton!
     
     @IBOutlet weak var houseCard1: UIImageView!
     @IBOutlet weak var houseCard2: UIImageView!
     @IBOutlet weak var youCard1: UIImageView!
     @IBOutlet weak var youCard2: UIImageView!
-    @IBOutlet weak var exitBtn: UIButton!
     
     
     var passName: String = "";
-    var pts: Int = 300;
+    var pts: Int!;
     var playCards: [String:Int] = ["spadeA":1, "spade2":2, "spade3":3, "spade4":4, "spade5":5, "spade6":6, "spade7":7, "spade8":8, "spade9":9, "spade10":10, "spadeJ":10, "spadeQ":10, "spadeK":10, "heartA":1, "heart2":2, "heart3":3, "heart4":4, "heart5":5, "heart6":6, "heart7":7, "heart8":8, "heart9":9, "heart10":10, "heartJ":10, "heartQ":10, "heartK":10, "diamondA":1, "diamond2":2, "diamond3":3, "diamond4":4, "diamond5":5, "diamond6":6, "diamond7":7, "diamond8":8, "diamond9":9, "diamond10":10, "diamondJ":10, "diamondQ":10, "diamondK":10, "clubA":1, "club2":2, "club3":3, "club4":4, "club5":5, "club6":6, "club7":7, "club8":8, "club9":9, "club10":10, "clubJ":10, "clubQ":10, "clubK":10];
     var card_name_list:[String] = [];
     var house_score: Int = 0;
@@ -37,6 +38,7 @@ class PlayViewController: UIViewController {
     var cardViewsYou: [UIImageView] = []
     var cardViewsHouse:[UIImageView] = []
     var youBusted = false
+    var createsArr: [Int] = []
     
     override func viewDidLoad() {
         super.viewDidLoad();
@@ -58,7 +60,6 @@ class PlayViewController: UIViewController {
         getCardCount = 0
         iniX = 100
         youBusted = false
-        exitBtn.isHidden = false
     }
 
     @IBAction func playBtnPressed(_ sender: UIButton) {
@@ -67,6 +68,7 @@ class PlayViewController: UIViewController {
             hitBtn.isHidden = false
             stayBtn.isHidden = false
             exitBtn.isHidden = true
+            checkBtn.isHidden = true
             
             card_name_list = Array(playCards.keys)
             card_name_list.shuffle()
@@ -76,10 +78,7 @@ class PlayViewController: UIViewController {
             youCard2.image = UIImage(named: "\(card_name_list[3]).png")
             
             house_score = Int(playCards["\(card_name_list[0])"]!) + Int(playCards["\(card_name_list[1])"]!)
-            
             you_score = Int(playCards["\(card_name_list[2])"]!) + Int(playCards["\(card_name_list[3])"]!)
-            print("Your Score = \(you_score)")
-            print("house_score = \(house_score)\n")
         } else {
             let controller = UIAlertController(title: "Notice!", message: "You don't have  enough pts!", preferredStyle: .alert)
             let dismissAction = UIAlertAction(title: "Dismiss", style: .cancel, handler: nil)
@@ -87,10 +86,6 @@ class PlayViewController: UIViewController {
             controller.addAction(dismissAction)
             self.present(controller, animated: true, completion: nil)
         }
-        
-        
-        
-        
     }
     
     @IBAction func hitBtnPressed(_ sender: UIButton) {
@@ -106,10 +101,9 @@ class PlayViewController: UIViewController {
             hitBtn.isHidden = true
             stayBtn.isHidden = true
             playBtn.isHidden = false
-            
-            
+            exitBtn.isHidden = false
+            checkBtn.isHidden = false
         }
-        
     }
     
     @IBAction func stayBtnPressed(_ sender: UIButton) {
@@ -122,6 +116,8 @@ class PlayViewController: UIViewController {
             hitBtn.isHidden = true
             stayBtn.isHidden = true
             playBtn.isHidden = false
+            exitBtn.isHidden = false
+            checkBtn.isHidden = false
         }
         
         while house_score < you_score {
@@ -133,29 +129,25 @@ class PlayViewController: UIViewController {
                 hitBtn.isHidden = true
                 stayBtn.isHidden = true
                 playBtn.isHidden = false
+                exitBtn.isHidden = false
+                checkBtn.isHidden = false
                 return
             }
         }
-        
         displayResult(isWin: false)
         
         hitBtn.isHidden = true
         stayBtn.isHidden = true
         playBtn.isHidden = false
-            
+        exitBtn.isHidden = false
+        checkBtn.isHidden = false
     }
-    
-    @IBAction func exitBtnPressed(_ sender: UIButton) {
-        self.performSegue(withIdentifier: "BackHome", sender: self)
-
-    }
-    
     
     func addCards(isYou: Bool){
         if isYou {
             let cardView = UIImageView()
             cardViewsYou.append(cardView)
-            cardViewsYou[getCardCount].frame = CGRect(x: iniX + 40, y: 460, width: 104, height: 145)
+            cardViewsYou[getCardCount].frame = CGRect(x: iniX + 40, y: 441, width: 104, height: 145)
             cardViewsYou[getCardCount].image = UIImage(named: "\(card_name_list[0]).png")
             view.addSubview(cardViewsYou[getCardCount])
             
@@ -166,7 +158,7 @@ class PlayViewController: UIViewController {
         } else {
             let cardView = UIImageView()
             cardViewsHouse.append(cardView)
-            cardViewsHouse[getCardCount].frame = CGRect(x: iniX + 40, y: 226, width: 104, height: 145)
+            cardViewsHouse[getCardCount].frame = CGRect(x: iniX + 40, y: 208, width: 104, height: 145)
             cardViewsHouse[getCardCount].image = UIImage(named: "\(card_name_list[0]).png")
             view.addSubview(cardViewsHouse[getCardCount])
             
@@ -190,6 +182,7 @@ class PlayViewController: UIViewController {
                 for i in self.cardViewsHouse {
                     i.removeFromSuperview()
                 }
+                self.createsArr.append(Int(self.pts))
             })
 
             winController.addAction(dismissAction)
@@ -206,6 +199,7 @@ class PlayViewController: UIViewController {
                     for i in self.cardViewsHouse {
                         i.removeFromSuperview()
                     }
+                    self.createsArr.append(Int(self.pts))
                 })
 
                 loseController.addAction(dismissAction)
@@ -221,6 +215,7 @@ class PlayViewController: UIViewController {
                     for i in self.cardViewsHouse {
                         i.removeFromSuperview()
                     }
+                    self.createsArr.append(Int(self.pts))
                 })
 
                 loseController.addAction(dismissAction)
@@ -229,6 +224,11 @@ class PlayViewController: UIViewController {
         }
     }
     
-
-
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        if (segue.identifier == "segueResultsView"){
+            let resultsVC = segue.destination as! ResultsViewController;
+            resultsVC.createsArr = self.createsArr
+        }
+    }
 }

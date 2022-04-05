@@ -7,18 +7,20 @@
 
 import UIKit
 
-class ResultsViewController: UIViewController {
-
+class ResultsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
+    
+    var createsArr: [Int] = [];
+    @IBOutlet weak var resultsTableView: UITableView!
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Do any additional setup after loading the view.
+        resultsTableView.dataSource = self
+        resultsTableView.delegate = self
     }
     
-    @IBAction func backBtnPressed(_ sender: UIButton) {
-        self.performSegue(withIdentifier: "SegueHome", sender: self)
-
-    }
     
     /*
     // MARK: - Navigation
@@ -29,5 +31,17 @@ class ResultsViewController: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
-
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return createsArr.count;
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = resultsTableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath);
+        
+        let title = cell.viewWithTag(1) as! UILabel;
+        let creates = cell.viewWithTag(2) as! UILabel;
+        title.text = String("Round \(indexPath.row + 1)");
+        creates.text = String(createsArr[indexPath.row]);
+        return cell
+    }
 }

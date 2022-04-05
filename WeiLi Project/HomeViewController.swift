@@ -16,16 +16,6 @@ class HomeViewController: UIViewController {
         // Do any additional setup after loading the view.
         
     }
-
-    
-    @IBAction func btnPressed(_ sender: UIButton) {
-        self.performSegue(withIdentifier: "SeguePlayView", sender: self)
-    }
-    
-    @IBAction func resaultsBtnPressed(_ sender: UIButton) {
-//        self.performSegue(withIdentifier: "SegueResultsView", sender: self)
-    }
-    
     
     @IBAction func textFieldDoneEditing(sender: UITextField) {
         sender.resignFirstResponder();
@@ -37,11 +27,12 @@ class HomeViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let passName = inputName.text ?? "";
         
+        let passName = inputName.text ?? "";
+        let pts = 500;
         let playVC = segue.destination as? PlayViewController;
         playVC?.passName = passName;
-        
+        playVC?.pts = pts;
     }
 }
 

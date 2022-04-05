@@ -22,7 +22,11 @@ class HomeViewController: UIViewController {
         self.performSegue(withIdentifier: "SeguePlayView", sender: self)
     }
     
-
+    @IBAction func resaultsBtnPressed(_ sender: UIButton) {
+//        self.performSegue(withIdentifier: "SegueResultsView", sender: self)
+    }
+    
+    
     @IBAction func textFieldDoneEditing(sender: UITextField) {
         sender.resignFirstResponder();
     }
@@ -35,8 +39,9 @@ class HomeViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let passName = inputName.text ?? "";
         
-        let playVC = segue.destination as! PlayViewController;
-        playVC.passName = passName;
+        let playVC = segue.destination as? PlayViewController;
+        playVC?.passName = passName;
+        
     }
 }
 

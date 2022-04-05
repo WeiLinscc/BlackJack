@@ -22,9 +22,11 @@ class PlayViewController: UIViewController {
     @IBOutlet weak var houseCard2: UIImageView!
     @IBOutlet weak var youCard1: UIImageView!
     @IBOutlet weak var youCard2: UIImageView!
+    @IBOutlet weak var exitBtn: UIButton!
+    
     
     var passName: String = "";
-    var pts: Int = 200;
+    var pts: Int = 300;
     var playCards: [String:Int] = ["spadeA":1, "spade2":2, "spade3":3, "spade4":4, "spade5":5, "spade6":6, "spade7":7, "spade8":8, "spade9":9, "spade10":10, "spadeJ":10, "spadeQ":10, "spadeK":10, "heartA":1, "heart2":2, "heart3":3, "heart4":4, "heart5":5, "heart6":6, "heart7":7, "heart8":8, "heart9":9, "heart10":10, "heartJ":10, "heartQ":10, "heartK":10, "diamondA":1, "diamond2":2, "diamond3":3, "diamond4":4, "diamond5":5, "diamond6":6, "diamond7":7, "diamond8":8, "diamond9":9, "diamond10":10, "diamondJ":10, "diamondQ":10, "diamondK":10, "clubA":1, "club2":2, "club3":3, "club4":4, "club5":5, "club6":6, "club7":7, "club8":8, "club9":9, "club10":10, "clubJ":10, "clubQ":10, "clubK":10];
     var card_name_list:[String] = [];
     var house_score: Int = 0;
@@ -32,10 +34,8 @@ class PlayViewController: UIViewController {
 //    var houseCount = 0
     var getCardCount = 0;
     var iniX = 100;
-    var cardViews: [UIImageView] = []
-
-    var addImgY = 460
-    var who_score = 0
+    var cardViewsYou: [UIImageView] = []
+    var cardViewsHouse:[UIImageView] = []
     var youBusted = false
     
     override func viewDidLoad() {
@@ -58,25 +58,37 @@ class PlayViewController: UIViewController {
         getCardCount = 0
         iniX = 100
         youBusted = false
+        exitBtn.isHidden = false
     }
 
     @IBAction func playBtnPressed(_ sender: UIButton) {
-        playBtn.isHidden = true
-        hitBtn.isHidden = false
-        stayBtn.isHidden = false
+        if pts >= 50 {
+            playBtn.isHidden = true
+            hitBtn.isHidden = false
+            stayBtn.isHidden = false
+            exitBtn.isHidden = true
+            
+            card_name_list = Array(playCards.keys)
+            card_name_list.shuffle()
+            houseCard1.image = UIImage(named: "\(card_name_list[0]).png")
+            houseCard2.image = UIImage(named: "\(card_name_list[1]).png")
+            youCard1.image = UIImage(named: "\(card_name_list[2]).png")
+            youCard2.image = UIImage(named: "\(card_name_list[3]).png")
+            
+            house_score = Int(playCards["\(card_name_list[0])"]!) + Int(playCards["\(card_name_list[1])"]!)
+            
+            you_score = Int(playCards["\(card_name_list[2])"]!) + Int(playCards["\(card_name_list[3])"]!)
+            print("Your Score = \(you_score)")
+            print("house_score = \(house_score)\n")
+        } else {
+            let controller = UIAlertController(title: "Notice!", message: "You don't have  enough pts!", preferredStyle: .alert)
+            let dismissAction = UIAlertAction(title: "Dismiss", style: .cancel, handler: nil)
+
+            controller.addAction(dismissAction)
+            self.present(controller, animated: true, completion: nil)
+        }
         
-        card_name_list = Array(playCards.keys)
-        card_name_list.shuffle()
-        houseCard1.image = UIImage(named: "\(card_name_list[0]).png")
-        houseCard2.image = UIImage(named: "\(card_name_list[1]).png")
-        youCard1.image = UIImage(named: "\(card_name_list[2]).png")
-        youCard2.image = UIImage(named: "\(card_name_list[3]).png")
         
-        house_score = Int(playCards["\(card_name_list[0])"]!) + Int(playCards["\(card_name_list[1])"]!)
-        
-        you_score = Int(playCards["\(card_name_list[2])"]!) + Int(playCards["\(card_name_list[3])"]!)
-        print("Your Score = \(you_score)")
-        print("house_score = \(house_score)\n")
         
         
     }
@@ -84,7 +96,6 @@ class PlayViewController: UIViewController {
     @IBAction func hitBtnPressed(_ sender: UIButton) {
        
         addCards(isYou: true)
-        you_score = who_score
         print("you_score = \(you_score)")
         print("house_score = \(house_score)\n")
         
@@ -95,6 +106,7 @@ class PlayViewController: UIViewController {
             hitBtn.isHidden = true
             stayBtn.isHidden = true
             playBtn.isHidden = false
+            
             
         }
         
@@ -114,7 +126,6 @@ class PlayViewController: UIViewController {
         
         while house_score < you_score {
             addCards(isYou: false)
-            house_score = who_score
             
             if house_score > 21 {
                 displayResult(isWin: true)
@@ -134,26 +145,37 @@ class PlayViewController: UIViewController {
             
     }
     
+    @IBAction func exitBtnPressed(_ sender: UIButton) {
+        self.performSegue(withIdentifier: "BackHome", sender: self)
+
+    }
+    
+    
     func addCards(isYou: Bool){
-        who_score = 0
-        if isYou{
-            who_score = you_score
-            addImgY = 460
+        if isYou {
+            let cardView = UIImageView()
+            cardViewsYou.append(cardView)
+            cardViewsYou[getCardCount].frame = CGRect(x: iniX + 40, y: 460, width: 104, height: 145)
+            cardViewsYou[getCardCount].image = UIImage(named: "\(card_name_list[0]).png")
+            view.addSubview(cardViewsYou[getCardCount])
+            
+            iniX += 40
+            you_score += Int(playCards["\(card_name_list[0])"]!)
+            card_name_list.remove(at: 0)
+            getCardCount += 1
         } else {
-            who_score = house_score
-            addImgY = 226
+            let cardView = UIImageView()
+            cardViewsHouse.append(cardView)
+            cardViewsHouse[getCardCount].frame = CGRect(x: iniX + 40, y: 226, width: 104, height: 145)
+            cardViewsHouse[getCardCount].image = UIImage(named: "\(card_name_list[0]).png")
+            view.addSubview(cardViewsHouse[getCardCount])
+            
+            iniX += 40
+            house_score += Int(playCards["\(card_name_list[0])"]!)
+            card_name_list.remove(at: 0)
+            getCardCount += 1
         }
         
-        let cardView = UIImageView()
-        cardViews.append(cardView)
-        cardViews[getCardCount].frame = CGRect(x: iniX + 40, y: addImgY, width: 104, height: 145)
-        cardViews[getCardCount].image = UIImage(named: "\(card_name_list[0]).png")
-        view.addSubview(cardViews[getCardCount])
-        
-        iniX += 40
-        who_score += Int(playCards["\(card_name_list[0])"]!)
-        card_name_list.remove(at: 0)
-        getCardCount += 1
     }
     
     func displayResult(isWin: Bool){
@@ -162,10 +184,12 @@ class PlayViewController: UIViewController {
             let dismissAction = UIAlertAction(title: "Dismiss", style: .cancel, handler: { action in
                 self.pts += 50
                 self.viewDidLoad()
-                for i in self.cardViews {
+                for i in self.cardViewsYou {
                     i.removeFromSuperview()
                 }
-                
+                for i in self.cardViewsHouse {
+                    i.removeFromSuperview()
+                }
             })
 
             winController.addAction(dismissAction)
@@ -176,10 +200,12 @@ class PlayViewController: UIViewController {
                 let dismissAction = UIAlertAction(title: "Dismiss", style: .cancel, handler: { action in
                     self.pts -= 50
                     self.viewDidLoad()
-                    for i in self.cardViews {
+                    for i in self.cardViewsYou {
                         i.removeFromSuperview()
                     }
-                    
+                    for i in self.cardViewsHouse {
+                        i.removeFromSuperview()
+                    }
                 })
 
                 loseController.addAction(dismissAction)
@@ -189,7 +215,10 @@ class PlayViewController: UIViewController {
                 let dismissAction = UIAlertAction(title: "Dismiss", style: .cancel, handler: { action in
                     self.pts -= 50
                     self.viewDidLoad()
-                    for i in self.cardViews {
+                    for i in self.cardViewsYou {
+                        i.removeFromSuperview()
+                    }
+                    for i in self.cardViewsHouse {
                         i.removeFromSuperview()
                     }
                 })

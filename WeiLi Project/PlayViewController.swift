@@ -32,7 +32,6 @@ class PlayViewController: UIViewController {
     var card_name_list:[String] = [];
     var house_score: Int = 0;
     var you_score: Int = 0;
-//    var houseCount = 0
     var getCardCount = 0;
     var iniX = 100;
     var cardViewsYou: [UIImageView] = []
@@ -91,8 +90,6 @@ class PlayViewController: UIViewController {
     @IBAction func hitBtnPressed(_ sender: UIButton) {
        
         addCards(isYou: true)
-        print("you_score = \(you_score)")
-        print("house_score = \(house_score)\n")
         
         if you_score > 21 {
             youBusted = true
@@ -147,7 +144,7 @@ class PlayViewController: UIViewController {
         if isYou {
             let cardView = UIImageView()
             cardViewsYou.append(cardView)
-            cardViewsYou[getCardCount].frame = CGRect(x: iniX + 40, y: 441, width: 104, height: 145)
+            cardViewsYou[getCardCount].frame = CGRect(x: iniX + 40, y: 456, width: 104, height: 145)
             cardViewsYou[getCardCount].image = UIImage(named: "\(card_name_list[0]).png")
             view.addSubview(cardViewsYou[getCardCount])
             
@@ -158,7 +155,7 @@ class PlayViewController: UIViewController {
         } else {
             let cardView = UIImageView()
             cardViewsHouse.append(cardView)
-            cardViewsHouse[getCardCount].frame = CGRect(x: iniX + 40, y: 208, width: 104, height: 145)
+            cardViewsHouse[getCardCount].frame = CGRect(x: iniX + 40, y: 223, width: 104, height: 145)
             cardViewsHouse[getCardCount].image = UIImage(named: "\(card_name_list[0]).png")
             view.addSubview(cardViewsHouse[getCardCount])
             

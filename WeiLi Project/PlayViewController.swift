@@ -13,6 +13,7 @@ class PlayViewController: UIViewController {
     @IBOutlet weak var welcomeLbl: UILabel!
     @IBOutlet weak var ptsLbl: UILabel!
     @IBOutlet weak var youLbl: UILabel!
+    @IBOutlet weak var houseLbl: UILabel!
     
     @IBOutlet weak var playBtn: UIButton!
     @IBOutlet weak var hitBtn: UIButton!
@@ -64,6 +65,8 @@ class PlayViewController: UIViewController {
         ptsLbl.text = "Your Credits: " + String(pts) + "pts";
                 
         youLbl.text = passName;
+        houseLbl.text = "House"
+        
         if (youLbl.text == ""){
             youLbl.text = "You";
             welcomeLbl.text = "Welcome, Friend";
@@ -106,6 +109,12 @@ class PlayViewController: UIViewController {
             house_score = Int(playCards["\(card_name_list[0])"]!) + Int(playCards["\(card_name_list[1])"]!)
             you_score = Int(playCards["\(card_name_list[2])"]!) + Int(playCards["\(card_name_list[3])"]!)
             
+            if (passName == "") {
+                passName = "You"
+            }
+            youLbl.text = passName + ": " + String(you_score)
+            houseLbl.text = "House: " + String(house_score)
+            
             card_name_list.removeFirst(4)
         } else {
             let controller = UIAlertController(title: "Notice!", message: "You don't have enough pts!", preferredStyle: .alert)
@@ -139,9 +148,8 @@ class PlayViewController: UIViewController {
             exitBtn.isHidden = false
             checkBtn.isHidden = false
         }
-//        print(you_score)
-//        print("youcount=\(youCount)")
-        
+
+        youLbl.text = passName + ": " + String(you_score)
     }
     
     @IBAction func stayBtnPressed(_ sender: UIButton) {
@@ -186,6 +194,8 @@ class PlayViewController: UIViewController {
         playBtn.isHidden = false
         exitBtn.isHidden = false
         checkBtn.isHidden = false
+        
+        houseLbl.text = "House: " + String(house_score)
     }
     
 //    func addCards(isYou: Bool){
